@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Viewer & Tweet Drafter</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar: Tweet Composer & Analytics -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742h.008v.008h-.008v-.008zm.37 3.078h.008v.008H9.054v-.008zm.37-3.078h.008v.008h-.008v-.008zm.37 3.078h.008v.008h-.008v-.008zm.37-3.078h.008v.008h-.008v-.008zm.37 3.078h.008v.008h-.008v-.008zm.37-3.078h.008v.008h-.008v-.008zm.37 3.078h.008v.008h-.008v-.008zm.37-3.078h.008v.008h-.008v-.008zm.37 3.078h.008v.008h-.008v-.008zM12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
+                    </svg>
+                    <h1>BigQuery Updates</h1>
+                </div>
+                <p class="tagline">Stay updated. Share instantly.</p>
+            </div>
+
+            <!-- Active Composer Section -->
+            <div class="composer-card glass">
+                <div class="composer-header">
+                    <h2>Tweet Composer</h2>
+                    <span class="badge badge-x">X / Twitter</span>
+                </div>
+                
+                <div class="composer-body">
+                    <textarea 
+                        id="tweet-text" 
+                        placeholder="Select a release note or start typing to draft your tweet..."
+                        maxlength="280"
+                    ></textarea>
+                    
+                    <div class="counter-container">
+                        <div class="progress-ring-container">
+                            <svg class="progress-ring" width="36" height="36">
+                                <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.1)" stroke-width="3" fill="transparent" r="14" cx="18" cy="18"/>
+                                <circle id="progress-ring-circle" class="progress-ring-circle" stroke="#6366f1" stroke-width="3" fill="transparent" r="14" cx="18" cy="18" stroke-dasharray="87.96" stroke-dashoffset="87.96"/>
+                            </svg>
+                            <span id="char-counter" class="char-counter">280</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Hashtags -->
+                <div class="hashtags-section">
+                    <label>Suggested Hashtags:</label>
+                    <div class="hashtags-list" id="hashtags-list">
+                        <button class="tag-btn" data-tag="#BigQuery">#BigQuery</button>
+                        <button class="tag-btn" data-tag="#GoogleCloud">#GoogleCloud</button>
+                        <button class="tag-btn" data-tag="#DataEngineering">#DataEng</button>
+                        <button class="tag-btn" data-tag="#AI">#AI</button>
+                        <button class="tag-btn" data-tag="#DataAnalytics">#DataAnalytics</button>
+                        <button class="tag-btn" data-tag="#CloudComputing">#Cloud</button>
+                    </div>
+                </div>
+
+                <div class="composer-actions">
+                    <button id="copy-btn" class="btn btn-secondary" title="Copy text to clipboard">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Copy
+                    </button>
+                    <button id="tweet-btn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" class="btn-icon">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        Post Draft
+                    </button>
+                </div>
+                
+                <div class="toast" id="toast">Copied to clipboard!</div>
+            </div>
+
+            <!-- Stats & Meta -->
+            <div class="meta-card glass">
+                <div class="stat-row">
+                    <span class="stat-label">Feed Source</span>
+                    <a href="https://docs.cloud.google.com/feeds/bigquery-release-notes.xml" target="_blank" class="stat-value link-out">
+                        BigQuery XML 
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Last Refreshed</span>
+                    <span id="last-refreshed-time" class="stat-value">Never</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Total Updates</span>
+                    <span id="stat-total-count" class="stat-value">0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Filter / Controls Header -->
+            <header class="controls-header glass">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Filter release notes (e.g. embeddings, slots)...">
+                </div>
+
+                <div class="header-actions">
+                    <!-- Refresh Button -->
+                    <button id="refresh-btn" class="btn btn-refresh btn-secondary">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" class="refresh-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.228 10H18M4 9h5M4 9h.01M16 4h.01" />
+                        </svg>
+                        <span class="refresh-text">Fetch Updates</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Active Filters Panel -->
+            <section class="filters-panel">
+                <div class="filter-group">
+                    <span class="filter-label">Filter by Type:</span>
+                    <div class="filter-tags" id="type-filter-tags">
+                        <button class="filter-tag active" data-type="all">All</button>
+                        <button class="filter-tag" data-type="Feature"><span class="dot dot-feature"></span>Feature</button>
+                        <button class="filter-tag" data-type="Changed"><span class="dot dot-changed"></span>Changed</button>
+                        <button class="filter-tag" data-type="Deprecated"><span class="dot dot-deprecated"></span>Deprecated</button>
+                        <button class="filter-tag" data-type="Bug Fix"><span class="dot dot-bugfix"></span>Bug Fix</button>
+                        <button class="filter-tag" data-type="General"><span class="dot dot-general"></span>General</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading View -->
+            <div id="loading-state" class="loading-state hidden">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+                <p>Retrieving Google BigQuery Release Notes...</p>
+            </div>
+
+            <!-- Error View -->
+            <div id="error-state" class="error-state glass hidden">
+                <div class="error-icon-wrapper">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" class="error-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3>Fetch Failed</h3>
+                <p id="error-message">Could not retrieve the release notes. Please check your network connection and try again.</p>
+                <button id="error-retry-btn" class="btn btn-primary">Retry Fetch</button>
+            </div>
+
+            <!-- Empty View -->
+            <div id="empty-state" class="empty-state glass hidden">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3>No Release Notes Found</h3>
+                <p>No updates match your search criteria. Try modifying your filters or terms.</p>
+            </div>
+
+            <!-- Release Notes List -->
+            <section class="notes-container" id="notes-list">
+                <!-- Dynamically generated notes go here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Entrypoint -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
